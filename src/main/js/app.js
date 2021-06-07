@@ -1,17 +1,14 @@
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Button from '@material-ui/core/Button';
+import SaveIcon from '@material-ui/icons/Save'
 
-class App extends Component {
-    render() {
-        return (
-            <div className="App">
-                <h1>Hello World!</h1>
-            </div>
-        );
-    }
+function App() {
+    return (
+        <Button variant="contained" color="primary" startIcon={<SaveIcon />}>
+            Hello World
+        </Button>
+    );
 }
 
-ReactDOM.render(
-    <App />,
-    document.getElementById('react')
-)
+ReactDOM.render(<App />, document.querySelector('#react'));
