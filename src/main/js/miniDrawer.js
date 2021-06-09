@@ -19,6 +19,7 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import EmployeesIcon from '@material-ui/icons/Group';
 import PresenceIcon from '@material-ui/icons/InsertInvitation';
+import { useHistory } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -88,6 +89,7 @@ export default function MiniDrawer() {
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
+    const history = useHistory();
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -144,14 +146,14 @@ export default function MiniDrawer() {
                 </div>
                 <Divider />
                 <List>
-                    <ListItem button>
+                    <ListItem button onClick={ () => history.push("/") }>
                         <ListItemIcon>
                             <InboxIcon />
                         </ListItemIcon>
                         <ListItemText primary="PRZEGLĄD" />
                     </ListItem>
 
-                    <ListItem button>
+                    <ListItem button onClick={ () => history.push("/employees") }>
                         <ListItemIcon>
                             <EmployeesIcon />
                         </ListItemIcon>
