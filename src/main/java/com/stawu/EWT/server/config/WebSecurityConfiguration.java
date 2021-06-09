@@ -34,7 +34,14 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        super.configure(http);
+        http.authorizeRequests()
+                .antMatchers("/**").permitAll()
+                .and().formLogin().permitAll()
+                .and().logout().permitAll()
+                .and().csrf().disable();
+
+        //Linijka zeby dzialala h2-console
+        http.headers().frameOptions().disable();
     }
 
 }
