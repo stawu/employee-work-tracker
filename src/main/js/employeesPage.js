@@ -1,8 +1,11 @@
 import React from "react";
-import {Dialog, DialogActions, DialogContent, DialogTitle, Fab, Grid, Tab, Tabs, TextField} from "@material-ui/core";
+import {
+    Fab
+} from "@material-ui/core";
 import AddIcon from "@material-ui/icons/PersonAdd"
-import Button from "@material-ui/core/Button";
 import AddEmployeeDialog from "./employeesPage/addEmployeeDialog";
+import axios from "axios";
+import EmployeesTable from "./employeesPage/employeesTable";
 
 class EmployeesPage extends React.Component {
 
@@ -10,10 +13,22 @@ class EmployeesPage extends React.Component {
         super(props);
 
         this.state = {
-            employeeDialogOpen: false
+            employeeDialogOpen: false,
+            employees: []
         };
 
         this.toggleEmployeeDialog = this.toggleEmployeeDialog.bind(this);
+        this.getEmployees = this.getEmployees.bind(this);
+        this.onAddEmployeeDialogClose = this.onAddEmployeeDialogClose.bind(this);
+    }
+
+    componentDidMount() {
+        this.getEmployees();
+    }
+
+    onAddEmployeeDialogClose(){
+        this.toggleEmployeeDialog();
+        this.getEmployees();
     }
 
     toggleEmployeeDialog(){
@@ -22,18 +37,29 @@ class EmployeesPage extends React.Component {
         }});
     }
 
+    async getEmployees(){
+        const employees = await axios.get('/api/employees');
+        this.setState({employees: employees.data})
+        console.log(this.state.employees);
+    }
+
 
     render() {
         return (
             <div>
-                Employee
+                <div>
+                    <EmployeesTable employees={this.state.employees} />
+                    <Fab variant="extended" onClick={this.toggleEmployeeDialog}
+                         style={{
+                             float: 'right',
+                             marginTop: '10px'
+                         }}>
+                        <AddIcon />
+                        Dodaj pracownika
+                    </Fab>
+                </div>
 
-                <Fab variant="extended" onClick={this.toggleEmployeeDialog}>
-                    <AddIcon />
-                    Dodaj pracownika
-                </Fab>
-
-                <AddEmployeeDialog open={this.state.employeeDialogOpen} onClose={this.toggleEmployeeDialog} />
+                <AddEmployeeDialog open={this.state.employeeDialogOpen} onClose={this.onAddEmployeeDialogClose} />
             </div>
         );
     }
