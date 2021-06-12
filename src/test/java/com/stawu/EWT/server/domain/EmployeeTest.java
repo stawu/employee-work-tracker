@@ -13,6 +13,18 @@ public class EmployeeTest {
     }
 
     @Test
+    public void defaultIdIsUndefined(){
+        final Employee employee = new Employee("Name", "LastName");
+        Assertions.assertEquals(Employee.Id.UNDEFINED, employee.getId());
+    }
+
+    @Test
+    public void constructedIdValueCorrect(){
+        final Employee employee = new Employee(0L, "Name", "LastName");
+        Assertions.assertEquals(0L, employee.getId());
+    }
+
+    @Test
     public void throwExceptionWhenNameOrLastNameIsBlank(){
         Assertions.assertThrows(IllegalArgumentException.class, () -> new Employee("", "LastName"));
         Assertions.assertThrows(IllegalArgumentException.class, () -> new Employee("Name", ""));
