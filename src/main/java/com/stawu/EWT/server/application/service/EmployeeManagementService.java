@@ -1,6 +1,7 @@
 package com.stawu.EWT.server.application.service;
 
 import com.stawu.EWT.server.application.in.AddEmployeeUseCase;
+import com.stawu.EWT.server.application.in.DeleteEmployeeUseCase;
 import com.stawu.EWT.server.application.in.GetAllEmployeesUseCase;
 import com.stawu.EWT.server.application.out.PersistEmployeePort;
 import com.stawu.EWT.server.domain.Employee;
@@ -9,7 +10,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class EmployeeManagementService implements AddEmployeeUseCase, GetAllEmployeesUseCase {
+public class EmployeeManagementService implements
+        AddEmployeeUseCase,
+        GetAllEmployeesUseCase,
+        DeleteEmployeeUseCase {
 
     private final PersistEmployeePort persistEmployeePort;
 
@@ -21,5 +25,10 @@ public class EmployeeManagementService implements AddEmployeeUseCase, GetAllEmpl
     @Override
     public Iterable<Employee> getAllEmployees() {
         return persistEmployeePort.findAll();
+    }
+
+    @Override
+    public void deleteEmployee(long employeeId) {
+        persistEmployeePort.deleteById(employeeId);
     }
 }

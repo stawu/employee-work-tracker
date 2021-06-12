@@ -5,4 +5,5 @@ import com.stawu.EWT.server.domain.Employee;
 public interface PersistEmployeePort {
     void save(Employee employee);
     Iterable<Employee> findAll();
+    void deleteById(long id);
 }
