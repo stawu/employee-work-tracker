@@ -1,9 +1,7 @@
 package com.stawu.EWT.server.adapter.web;
 
-import com.stawu.EWT.server.adapter.persistence.EmployeeDTO;
 import com.stawu.EWT.server.application.in.AddEmployeeUseCase;
 import com.stawu.EWT.server.application.in.GetAllEmployeesUseCase;
-import com.stawu.EWT.server.application.service.EmployeeManagementService;
 import com.stawu.EWT.server.domain.Employee;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -20,21 +18,20 @@ public class EmployeeController {
     private final GetAllEmployeesUseCase getAllEmployeesUseCase;
 
     @PostMapping("/employees")
-    public EmployeeDTO postEmployee(@Valid @RequestBody EmployeeDTO employeeDTO){
-        final Employee employee = new Employee(employeeDTO.getName(), employeeDTO.getLastName());
-        addEmployeeUseCase.addEmployee(new Employee(employeeDTO.getName(), employee.getLastName()));
+    public EmployeeDTO_Request postEmployee(@Valid @RequestBody EmployeeDTO_Request employeeDTO_request){
+        addEmployeeUseCase.addEmployee(new Employee(employeeDTO_request.getName(), employeeDTO_request.getLastName()));
 
-        return employeeDTO;
+        return employeeDTO_request;
     }
 
     @GetMapping("/employees")
-    public Iterable<EmployeeDTO> getEmployees(){
-        final var employeesDTO = new LinkedList<EmployeeDTO>();
+    public Iterable<EmployeeDTO_Response> getEmployees(){
+        final var employeeDTO_responses = new LinkedList<EmployeeDTO_Response>();
 
-        getAllEmployeesUseCase.getAllEmployees().forEach(employee -> employeesDTO.add(
-                new EmployeeDTO(employee.getName(), employee.getLastName())
+        getAllEmployeesUseCase.getAllEmployees().forEach(employee -> employeeDTO_responses.add(
+                new EmployeeDTO_Response(employee.getId(), employee.getName(), employee.getLastName())
         ));
 
-        return employeesDTO;
+        return employeeDTO_responses;
     }
 }
