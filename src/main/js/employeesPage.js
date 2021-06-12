@@ -48,7 +48,7 @@ class EmployeesPage extends React.Component {
         return (
             <div>
                 <div>
-                    <EmployeesTable employees={this.state.employees} />
+                    <EmployeesTable employees={this.state.employees} onEmployeesChanged={this.getEmployees} />
                     <Fab variant="extended" onClick={this.toggleEmployeeDialog}
                          style={{
                              float: 'right',
