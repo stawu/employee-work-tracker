@@ -35,4 +35,9 @@ public class EmployeeJpaPersistenceAdapter implements PersistEmployeePort {
 
         return employees;
     }
+
+    @Override
+    public void deleteById(long id) {
+        employeeJpaRepository.deleteById(id);
+    }
 }
