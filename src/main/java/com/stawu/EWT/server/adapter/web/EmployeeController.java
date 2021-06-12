@@ -1,9 +1,12 @@
 package com.stawu.EWT.server.adapter.web;
 
 import com.stawu.EWT.server.application.in.AddEmployeeUseCase;
+import com.stawu.EWT.server.application.in.DeleteEmployeeUseCase;
 import com.stawu.EWT.server.application.in.GetAllEmployeesUseCase;
 import com.stawu.EWT.server.domain.Employee;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -16,6 +19,7 @@ public class EmployeeController {
 
     private final AddEmployeeUseCase addEmployeeUseCase;
     private final GetAllEmployeesUseCase getAllEmployeesUseCase;
+    private final DeleteEmployeeUseCase deleteEmployeeUseCase;
 
     @PostMapping("/employees")
     public EmployeeDTO_Request postEmployee(@Valid @RequestBody EmployeeDTO_Request employeeDTO_request){
@@ -33,5 +37,16 @@ public class EmployeeController {
         ));
 
         return employeeDTO_responses;
+    }
+
+    @DeleteMapping("/employees/{id}")
+    public ResponseEntity<?> deleteEmployee(@PathVariable(value = "id") long id){
+        try {
+            deleteEmployeeUseCase.deleteEmployee(id);
+        } catch (EmptyResultDataAccessException e){
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok("Entity deleted");
     }
 }

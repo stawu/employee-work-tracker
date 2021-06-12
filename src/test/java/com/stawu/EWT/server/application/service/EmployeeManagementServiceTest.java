@@ -40,4 +40,11 @@ public class EmployeeManagementServiceTest {
 
         Assertions.assertEquals(employees, employeeManagementService.getAllEmployees());
     }
+
+    @Test
+    public void removeEmployeeFromPersistenceStorage(){
+        employeeManagementService.deleteEmployee(0);
+
+        Mockito.verify(persistEmployeePort, Mockito.times(1)).deleteById(0);
+    }
 }
