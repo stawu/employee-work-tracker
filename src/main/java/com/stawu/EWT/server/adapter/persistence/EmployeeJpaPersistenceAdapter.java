@@ -28,7 +28,9 @@ public class EmployeeJpaPersistenceAdapter implements PersistEmployeePort {
         employeeJpaRepository.findAll()
                 .forEach(employeeJpaEntity ->
                         employees.add(new Employee(
-                            employeeJpaEntity.getName(), employeeJpaEntity.getLastName()
+                            employeeJpaEntity.getId(),
+                            employeeJpaEntity.getName(),
+                            employeeJpaEntity.getLastName()
                         )));
 
         return employees;
