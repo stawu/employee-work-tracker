@@ -1,0 +1,2 @@
+rootProject.name = "EWT-job-reporter-android"
+include ':app'
