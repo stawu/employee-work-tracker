@@ -39,6 +39,7 @@ class PresencePage extends React.Component {
             selectedYearNumber: dateNow.getFullYear(),
             selectedDays: this.daysBetween(firstDayOfMonthDate, lastDayOfMonthDate),
             workStatuses: {},
+            workDurationsSum: {},
             statusPopOverAnchor: null,
             statusPopOverEmployeeData: null
         }
@@ -99,8 +100,16 @@ class PresencePage extends React.Component {
             }
         });
 
+        const workDurationsSumData = await axios.get('/api/employees/' + employeeId + '/work-durations/sum-value', {
+            params: {
+                from: fromDate.toISOString().split('T', 1)[0],
+                to: toDate.toISOString().split('T', 1)[0]
+            }
+        });
+
         this.setState(prevState => {
             prevState.workStatuses[employeeId.toString()] = statusData.data;
+            prevState.workDurationsSum[employeeId.toString()] = workDurationsSumData.data;
 
             return ({
                 workStatuses: prevState.workStatuses
@@ -131,7 +140,8 @@ class PresencePage extends React.Component {
             selectedYearNumber: newYearValue,
             selectedMonthNumber: newMonthValue,
             selectedDays: this.daysBetween(firstDayOfMonthDate, lastDayOfMonthDate),
-            workStatuses: {}
+            workStatuses: {},
+            workDurationsSum: {}
         });
 
         await this.getWorkStatusesOfAllEmployeesBetween(firstDayOfMonthDate, lastDayOfMonthDate);
@@ -212,6 +222,9 @@ class PresencePage extends React.Component {
                                             <TableCell>
                                                 Pracownik
                                             </TableCell>
+                                            <TableCell>
+                                                Czas pracy
+                                            </TableCell>
                                         </TableRow>
                                     </TableHead>
 
@@ -221,6 +234,22 @@ class PresencePage extends React.Component {
                                             <TableRow>
                                                 <TableCell>
                                                     {employee.name + " " + employee.lastName}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        (() => {
+                                                            const workDurationsSum = this.state.workDurationsSum[employee.id.toString()];
+                                                            if (workDurationsSum === undefined)
+                                                                return (
+                                                                    <CircularProgress size={15}/>
+                                                                );
+                                                            else {
+                                                                return (
+                                                                    workDurationsSum.duration
+                                                                );
+                                                            }
+                                                        })()
+                                                    }
                                                 </TableCell>
                                             </TableRow>
                                         )}
@@ -236,7 +265,15 @@ class PresencePage extends React.Component {
                                         <TableRow>
                                             {
                                                 this.state.selectedDays.map(dayDate =>
-                                                    <TableCell>
+                                                    <TableCell style={{
+                                                        border: '1px solid',
+                                                        borderColor: 'rgba(174,176,179,0.52)',
+                                                        minWidth: '80px',
+                                                        fontSize: '12px',
+                                                        textAlign: 'center',
+                                                        height: '40px',
+                                                        padding: '0px'
+                                                    }}>
                                                         {dayDate.toLocaleDateString(undefined, {
                                                             weekday: 'short',
                                                             month: 'numeric',
@@ -253,7 +290,11 @@ class PresencePage extends React.Component {
                                             <TableRow>
                                                 {
                                                     this.state.selectedDays.map(dayDate =>
-                                                        <TableCell>
+                                                        <TableCell style={{
+                                                            textAlign: 'center',
+                                                            border: '1px solid',
+                                                            borderColor: 'rgba(174,176,179,0.52)',
+                                                        }}>
                                                             <div>
                                                             {
                                                                 (() => {
