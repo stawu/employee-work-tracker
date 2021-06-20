@@ -1,4 +1,4 @@
-package com.stawu.EWT.server.adapter.persistence;
+package com.stawu.EWT.server.adapter.persistence.employee;
 
 import com.stawu.EWT.server.application.out.PersistEmployeePort;
 import com.stawu.EWT.server.domain.Employee;

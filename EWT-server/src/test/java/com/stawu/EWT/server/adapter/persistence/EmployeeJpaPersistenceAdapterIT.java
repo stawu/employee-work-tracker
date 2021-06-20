@@ -1,5 +1,6 @@
 package com.stawu.EWT.server.adapter.persistence;
 
+import com.stawu.EWT.server.adapter.persistence.employee.EmployeeJpaPersistenceAdapter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.stawu.EWT.server.adapter.persistence;
+package com.stawu.EWT.server.adapter.persistence.employee;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
