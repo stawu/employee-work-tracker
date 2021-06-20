@@ -4,16 +4,20 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.room.Room;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -69,6 +73,9 @@ public class MainActivity extends AppCompatActivity {
             mCodeScanner.startPreview();
         });
 
+        ConstraintLayout constraintLayout = findViewById(R.id.constrain_layout);
+        constraintLayout.setVisibility(View.GONE);
+
         CodeScannerView scannerView = findViewById(R.id.scanner_view);
         mCodeScanner = new CodeScanner(this, scannerView);
         mCodeScanner.setScanMode(ScanMode.SINGLE);
@@ -77,11 +84,15 @@ public class MainActivity extends AppCompatActivity {
                 if(!allowQrProcessing_main_thread)
                     return;
                 allowQrProcessing_main_thread = false;
+                constraintLayout.setVisibility(View.VISIBLE);
 
                 Toast.makeText(MainActivity.this, result.getText(), Toast.LENGTH_SHORT).show();
 
                 final Handler handler = new Handler();
-                handler.postDelayed(() -> mCodeScanner.startPreview(), 5000);
+                handler.postDelayed(() -> {
+                    constraintLayout.setVisibility(View.GONE);
+                    mCodeScanner.startPreview();
+                }, 5000);
                 handler.postDelayed(() -> {
                     this.allowQrProcessing_cam_thread = true;
                     this.allowQrProcessing_main_thread = true;
