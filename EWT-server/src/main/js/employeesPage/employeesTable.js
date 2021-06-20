@@ -1,18 +1,22 @@
 import {
-    Button,
-    Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
+    Button, Checkbox,
+    Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton,
     Paper,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
-    TableRow
+    TableRow, Toolbar, Tooltip
 } from "@material-ui/core";
 import React from "react";
 import DeleteIcon from '@material-ui/icons/Delete';
 import axios from "axios";
 import {idID} from "@material-ui/core/locale";
+import Typography from "@material-ui/core/Typography";
+import CenterFocusWeakIcon from '@material-ui/icons/CenterFocusWeak';
+import QrCodes from "../qrCodes";
+import html2canvas from "html2canvas";
 
 class EmployeesTable extends React.Component {
 
@@ -22,14 +26,17 @@ class EmployeesTable extends React.Component {
         this.state = {
             mouseOverEntityId: null,
             deleteDialogOpen: false,
-            employeeToRemove: null
+            employeeToRemove: null,
+            selectedEmployees: []
         };
 
         this.onDialogDeleteEmployeeButtonClicked = this.onDialogDeleteEmployeeButtonClicked.bind(this);
         this.onMouseEnterRow = this.onMouseEnterRow.bind(this);
         this.onMouseExitRow = this.onMouseExitRow.bind(this);
+        this.onRowClicked = this.onRowClicked.bind(this);
         this.openDeleteDialog = this.openDeleteDialog.bind(this);
         this.closeDeleteDialog = this.closeDeleteDialog.bind(this);
+        this.toggleAllEmployeesSelection = this.toggleAllEmployeesSelection.bind(this);
     }
 
     onMouseEnterRow(employeeId) {
@@ -41,6 +48,14 @@ class EmployeesTable extends React.Component {
     onMouseExitRow(employeeId) {
         this.setState(prevState => ({
             mouseOverEntityId: prevState.mouseOverEntityId === employeeId ? null : prevState.mouseOverEntityId
+        }));
+    }
+
+    onRowClicked(employeeId) {
+        this.setState(prevState => ({
+            selectedEmployees: prevState.selectedEmployees.includes(employeeId) ?
+                prevState.selectedEmployees.filter(e => e !== employeeId) :
+                prevState.selectedEmployees.concat(employeeId)
         }));
     }
 
@@ -64,13 +79,48 @@ class EmployeesTable extends React.Component {
         this.closeDeleteDialog();
     }
 
+    toggleAllEmployeesSelection(){
+        this.setState(previousState => ({
+            selectedEmployees: previousState.selectedEmployees.length === this.props.employees.length ?
+                [] :
+                this.props.employees.map(employee => employee.id)
+        }));
+    }
+
     render() {
         return (
             <Paper>
+                <Toolbar style={this.state.selectedEmployees.length > 0 ? {
+                    background: "rgba(245, 0, 57, 0.59)"
+                } : {}}>
+                    {
+                        this.state.selectedEmployees.length > 0 ?
+                            <>
+                                <Typography variant="subtitle1" style={{flex: "1 1 100%"}}>
+                                    { "Wybrano: " + this.state.selectedEmployees.length + " pracowników" }
+                                </Typography>
+                                <Tooltip title="Wygeneruj kody QR">
+                                    <Button color="default" variant="contained" startIcon={<CenterFocusWeakIcon />} size="small" onClick={ () => this.props.onGenerateQrCode(this.state.selectedEmployees) }>
+                                        QR
+                                    </Button>
+                                </Tooltip>
+                            </>
+                        :
+                            <Typography variant="h6">
+                            Pracownicy
+                            </Typography>
+                    }
+                </Toolbar>
+
                 <TableContainer>
                     <Table>
                         <TableHead>
                             <TableRow>
+                                <TableCell padding="checkbox">
+                                    <Checkbox
+                                        indeterminate={this.state.selectedEmployees.length > 0 && this.state.selectedEmployees.length < this.props.employees.length}
+                                        checked={this.state.selectedEmployees.length > 0} onClick={this.toggleAllEmployeesSelection}/>
+                                </TableCell>
                                 <TableCell>
                                     Imię
                                 </TableCell>
@@ -82,14 +132,21 @@ class EmployeesTable extends React.Component {
 
                         <TableBody>
                             {this.props.employees.map(employee => {
+                                const isEmployeeSelected = this.state.selectedEmployees.includes(employee.id);
+
                                 return (
                                     <TableRow hover
                                               onMouseEnter={ () => this.onMouseEnterRow(employee.id) }
-                                              onMouseLeave={ () => this.onMouseExitRow(employee.id) }>
-                                        <TableCell width={6}>
+                                              onMouseLeave={ () => this.onMouseExitRow(employee.id) }
+                                              onClick={ () => this.onRowClicked(employee.id) }
+                                              selected={isEmployeeSelected}>
+                                        <TableCell padding="checkbox">
+                                            <Checkbox checked={isEmployeeSelected}/>
+                                        </TableCell>
+                                        <TableCell>
                                             {employee.name}
                                         </TableCell>
-                                        <TableCell width={6}>
+                                        <TableCell>
                                             <div style={{
                                                 position: "relative",
                                                 height: "30px",
@@ -145,7 +202,6 @@ class EmployeesTable extends React.Component {
                         </DialogActions>
                     </Dialog>
                 }
-
             </Paper>
         );
     }

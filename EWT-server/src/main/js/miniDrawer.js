@@ -160,7 +160,7 @@ export default function MiniDrawer() {
                         <ListItemText primary="PRACOWNICY" />
                     </ListItem>
 
-                    <ListItem button>
+                    <ListItem button onClick={ () => history.push("/presence") }>
                         <ListItemIcon>
                             <PresenceIcon />
                         </ListItemIcon>

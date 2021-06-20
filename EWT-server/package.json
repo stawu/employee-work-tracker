@@ -4,7 +4,9 @@
   "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit,",
   "main": "index.js",
   "scripts": {
-    "watch": "webpack --watch -d --output ./src/main/resources/static/built/bundle.js"
+    "watch": "webpack --watch -d --output ./src/main/resources/static/built/bundle.js",
+    "webpack-json": "webpack --json > stats.json",
+    "analyzer": "webpack-bundle-analyzer stats.json"
   },
   "repository": {
     "type": "git",
@@ -21,8 +23,10 @@
     "@material-ui/icons": "^4.11.2",
     "axios": "^0.21.1",
     "core-js": "^3.14.0",
+    "html2canvas": "^1.0.0-rc.7",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-qr-code": "^1.1.1",
     "react-router-dom": "^5.2.0",
     "regenerator-runtime": "^0.13.7",
     "rest": "2.0.0"
@@ -33,6 +37,7 @@
     "@babel/preset-react": "^7.13.13",
     "babel-loader": "^8.2.2",
     "webpack": "^4.19.1",
+    "webpack-bundle-analyzer": "^4.4.2",
     "webpack-cli": "^3.1.0"
   }
 }

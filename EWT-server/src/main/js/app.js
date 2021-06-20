@@ -16,7 +16,8 @@ import MiniDrawer from "./miniDrawer";
 import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
 import OverviewPage from './overviewPage.js'
-import EmployeesPage from "./employeesPage.js";
+import EmployeesPage from "./employeesPage/employeesPage.js";
+import PresencePage from "./presencePage/presencePage"
 
 const drawerWidth = 240;
 
@@ -96,6 +97,10 @@ function App() {
                     <div className={classes.toolbar} />
 
                     <Switch>
+                        <Route path="/presence">
+                            <PresencePage />
+                        </Route>
+
                         <Route path="/employees">
                             <EmployeesPage />
                         </Route>
