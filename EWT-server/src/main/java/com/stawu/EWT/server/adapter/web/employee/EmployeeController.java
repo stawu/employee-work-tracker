@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
@@ -101,5 +102,48 @@ public class EmployeeController {
         });
 
         return workDurationsDTO;
+    }
+
+    @GetMapping("/employees/{id}/work-durations/sum-value")
+    public ResponseEntity<WorkDurationDTO_Response> getEmployeeWorkDurationSumValueBetween(
+            @PathVariable(value = "id") long employeeId,
+            @RequestParam(name = "from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromInclusive,
+            @RequestParam(name = "to") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toInclusive){
+        if(fromInclusive.isAfter(toInclusive))
+            return ResponseEntity.badRequest().build();
+
+        Instant startInstant = null;
+        Instant endInstant = null;
+        Duration duration = Duration.ZERO;
+
+        final var analysis = getWorkTimeAnalysisOfEmployeeUseCase.getWorkTimeAnalysisOfEmployeeBetween(employeeId, fromInclusive, toInclusive);
+        for (var currentDay = fromInclusive; currentDay.isBefore(toInclusive) ; currentDay = currentDay.plusDays(1)) {
+            final var workDurations = analysis.getWorkDurationsOfDay(currentDay);
+            for(final var workDuration : workDurations){
+
+                if(workDuration.getStartInstant() != null){
+                    if(startInstant == null)
+                        startInstant = workDuration.getStartInstant();
+                    else if(workDuration.getStartInstant().isBefore(startInstant))
+                        startInstant = workDuration.getStartInstant();
+                }
+
+                if(workDuration.getEndInstant() != null) {
+                    if (endInstant == null)
+                        endInstant = workDuration.getEndInstant();
+                    else if (workDuration.getEndInstant().isAfter(endInstant))
+                        endInstant = workDuration.getEndInstant();
+                }
+
+                final var workDurationValue = workDuration.getDuration();
+                if(workDurationValue != null)
+                    duration = duration.plus(workDurationValue);
+
+            }
+        }
+
+        final String durationAsString = String.format("%dg %dm", duration.toHours(), duration.toMinutesPart());
+
+        return ResponseEntity.ok(new WorkDurationDTO_Response(startInstant, endInstant, durationAsString));
     }
 }
