@@ -1,4 +1,4 @@
-package com.stawu.EWT.server.adapter.web;
+package com.stawu.EWT.server.adapter.web.employee;
 
 import lombok.Data;
 
