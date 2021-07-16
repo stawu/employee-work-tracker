@@ -1,8 +1,11 @@
+using EWT_Application.Out;
+using EWT_Persistence;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,6 +14,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace EWT_Web
@@ -27,16 +31,18 @@ namespace EWT_Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMediatR(typeof(Startup));
+            services.AddMediatR(Assembly.Load("EWT-Application"));
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "EWT_Web", Version = "v1" });
             });
+
+            PersistenceServiceConfiguration.ConfigurePersistenceService(services, Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, EWTDbContext dbContext)
         {
             if (env.IsDevelopment())
             {
@@ -55,6 +61,8 @@ namespace EWT_Web
             {
                 endpoints.MapControllers();
             });
+
+            PersistenceServiceConfiguration.ConfigurePersistenceRuntime(env, dbContext);
         }
     }
 }
