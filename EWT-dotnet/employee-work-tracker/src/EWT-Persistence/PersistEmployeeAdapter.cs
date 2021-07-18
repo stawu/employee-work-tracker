@@ -18,15 +18,15 @@ namespace EWT_Persistence
             this.dbContext = dbContext;
         }
 
-        public void Save(Employee employee)
+        public async Task SaveAsync(Employee employee)
         {
-            dbContext.Employees.Add(new EmployeeEntity 
+            await dbContext.Employees.AddAsync(new EmployeeEntity 
             { 
                 Name = employee.Name, 
                 LastName = employee.LastName 
             });
 
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
         }
     }
 }
