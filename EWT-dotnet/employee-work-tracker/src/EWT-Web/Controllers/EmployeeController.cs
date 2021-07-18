@@ -1,4 +1,5 @@
 ﻿using EWT_Application.Commands;
+using EWT_Application.Queries;
 using EWT_Domain;
 using EWT_Web.DTO;
 using MediatR;
@@ -30,6 +31,19 @@ namespace EWT_Web.Controllers
         {
             await mediator.Send(new AddEmployeeCommand(
                 new Employee(employeeRequest.Name, employeeRequest.LastName)));
+        }
+
+        [HttpGet("all")]
+        public async Task<IEnumerable<EmployeeResponseDTO>> GetEmployees()
+        {
+            var employees = await mediator.Send(new GetEmployeesQuery());
+
+            return employees.Select(e => new EmployeeResponseDTO 
+            { 
+                Id = e.Id.Value, 
+                Name = e.Name, 
+                LastName = e.LastName 
+            });
         }
     }
 }

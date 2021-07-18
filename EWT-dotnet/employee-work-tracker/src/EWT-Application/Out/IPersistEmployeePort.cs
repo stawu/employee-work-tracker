@@ -10,5 +10,6 @@ namespace EWT_Application.Out
     public interface IPersistEmployeePort
     {
         Task SaveAsync(Employee employee);
+        Task<IEnumerable<Employee>> GetEmployeesAsync();
     }
 }

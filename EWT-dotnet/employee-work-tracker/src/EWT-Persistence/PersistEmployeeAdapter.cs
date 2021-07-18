@@ -18,6 +18,12 @@ namespace EWT_Persistence
             this.dbContext = dbContext;
         }
 
+        public Task<IEnumerable<Employee>> GetEmployeesAsync()
+        {
+            return Task.FromResult(dbContext.Employees.AsEnumerable()
+                .Select(e => new Employee(e.Id, e.Name, e.LastName)));
+        }
+
         public async Task SaveAsync(Employee employee)
         {
             await dbContext.Employees.AddAsync(new EmployeeEntity 

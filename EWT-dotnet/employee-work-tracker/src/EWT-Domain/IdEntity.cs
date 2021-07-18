@@ -1,7 +1,9 @@
-﻿namespace EWT_Domain
+﻿using System;
+
+namespace EWT_Domain
 {
     public class IdEntity
     {
-        public ulong? Id { get; protected set; }
+        public Guid? Id { get; protected set; }
     }
 }
