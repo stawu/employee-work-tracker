@@ -69,7 +69,7 @@ namespace EWT_Domain_Tests
         [Fact]
         public void PermitToSetIdOnlyInConstrcutor()
         {
-            const ulong id = 1; 
+            Guid id = Guid.NewGuid(); 
 
             Employee employee = new Employee(id, "Name", "LastName");
             Assert.Equal(id, employee.Id);

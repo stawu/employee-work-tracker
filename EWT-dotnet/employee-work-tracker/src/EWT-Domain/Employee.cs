@@ -9,7 +9,7 @@ namespace EWT_Domain
 {
     public class Employee : IdEntity
     {
-        public Employee(ulong id, string name, string lastName) : this(name, lastName)
+        public Employee(Guid id, string name, string lastName) : this(name, lastName)
         {
             Id = id;
         }
