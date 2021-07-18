@@ -1,4 +1,5 @@
 ﻿using EWT_Persistence.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace EWT_Persistence
 {
-    public class EWTDbContext : DbContext
+    public class EWTDbContext : IdentityDbContext
     {
         public EWTDbContext(DbContextOptions<EWTDbContext> options) : base(options)
         { }
