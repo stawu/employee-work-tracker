@@ -5,4 +5,16 @@
     <RootNamespace>EWT_Application</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Queries\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EWT-Domain\EWT-Domain.csproj" />
+  </ItemGroup>
+
 </Project>

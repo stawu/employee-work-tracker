@@ -24,12 +24,12 @@ namespace EWT_Web.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> PostEmployee(EmployeeRequestDTO employeeRequest)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task PostEmployee(EmployeeRequestDTO employeeRequest)
         {
             await mediator.Send(new AddEmployeeCommand(
                 new Employee(employeeRequest.Name, employeeRequest.LastName)));
-
-            return Ok();
         }
     }
 }
