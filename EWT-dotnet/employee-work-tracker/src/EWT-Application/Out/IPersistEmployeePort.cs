@@ -1,4 +1,5 @@
 ﻿using EWT_Domain;
+using FluentResults;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace EWT_Application.Out
     {
         Task SaveAsync(Employee employee);
         Task<IEnumerable<Employee>> GetEmployeesAsync();
+        Task<Result> DeleteAsync(Guid employeeId);
     }
 }
