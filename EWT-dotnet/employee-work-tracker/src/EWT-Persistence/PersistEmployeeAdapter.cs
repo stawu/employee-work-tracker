@@ -1,10 +1,11 @@
-﻿using EWT_Application.Out;
+﻿using EWT_Application.Errors;
+using EWT_Application.Out;
 using EWT_Domain;
 using EWT_Persistence.Entities;
+using FluentResults;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EWT_Persistence
@@ -16,6 +17,18 @@ namespace EWT_Persistence
         public PersistEmployeeAdapter(EWTDbContext dbContext)
         {
             this.dbContext = dbContext;
+        }
+
+        public async Task<Result> DeleteAsync(Guid employeeId)
+        {
+            EmployeeEntity? employeeEntity = dbContext.Employees.Find(employeeId);
+            if (employeeEntity == null)
+                return Result.Fail(new EmployeeNotExistsError());
+
+            dbContext.Employees.Remove(employeeEntity);
+            await dbContext.SaveChangesAsync();
+
+            return Result.Ok();
         }
 
         public Task<IEnumerable<Employee>> GetEmployeesAsync()

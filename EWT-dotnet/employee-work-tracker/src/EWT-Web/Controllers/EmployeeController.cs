@@ -1,4 +1,5 @@
 ﻿using EWT_Application.Commands;
+using EWT_Application.Errors;
 using EWT_Application.Queries;
 using EWT_Domain;
 using EWT_Web.DTO;
@@ -44,6 +45,21 @@ namespace EWT_Web.Controllers
                 Name = e.Name, 
                 LastName = e.LastName 
             });
+        }
+
+        [HttpDelete("{employeeId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeleteEmployee([FromRoute] Guid employeeId)
+        { 
+            var result = await mediator.Send(new DeleteEmployeeCommand(employeeId));
+
+            if (result.HasError<EmployeeNotExistsError>())
+                return NotFound();
+            else if (result.IsFailed)
+                throw new NotImplementedException();
+
+            return Ok();
         }
     }
 }
