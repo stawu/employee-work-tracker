@@ -13,6 +13,6 @@ namespace EWT_Domain
             DateTimeInstant = dateTimeInstant.ToUniversalTime();
         }
 
-        public DateTime DateTimeInstant { get; }
+        public DateTime DateTimeInstant { get; private set; }
     }
 }

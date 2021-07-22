@@ -22,6 +22,7 @@ namespace EWT_Persistence
             });
 
             services.AddTransient<IPersistEmployeePort, PersistEmployeeAdapter>();
+            services.AddTransient<IPersistWorkEventPort, PersistWorkEventAdapter>();
         }
 
         public static void ConfigurePersistenceRuntime(IWebHostEnvironment env, EWTDbContext dbContext)

@@ -15,5 +15,6 @@ namespace EWT_Persistence
         { }
 
         public DbSet<EmployeeEntity> Employees { get; set; }
+        public DbSet<WorkEventEntity> WorkEvents { get; set; }
     }
 }
