@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace EWT_Persistence
 {
@@ -21,7 +22,7 @@ namespace EWT_Persistence
 
         public async Task<Result> DeleteAsync(Guid employeeId)
         {
-            EmployeeEntity? employeeEntity = dbContext.Employees.Find(employeeId);
+            EmployeeEntity? employeeEntity = await dbContext.Employees.FindAsync(employeeId);
             if (employeeEntity == null)
                 return Result.Fail(new EmployeeNotExistsError());
 
