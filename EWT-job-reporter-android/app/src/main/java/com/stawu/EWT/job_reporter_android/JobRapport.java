@@ -10,6 +10,6 @@ public class JobRapport {
     @PrimaryKey(autoGenerate = true)
     public int id;
 
-    public long employeeId;
+    public String employeeId;
     public long timeStamp;
 }
