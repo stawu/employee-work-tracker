@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
         AppDatabase.singleton = Room.databaseBuilder(this.getApplicationContext(), AppDatabase.class, "main-db").build();
 
+        HttpsTrustManager.allowAllSSL();
         requestQueue = Volley.newRequestQueue(this);
 
         setContentView(R.layout.activity_main);
@@ -107,24 +108,26 @@ public class MainActivity extends AppCompatActivity {
 
             final JobRapport jobRapport = new JobRapport();
             jobRapport.timeStamp = Instant.now().toEpochMilli();
-            jobRapport.employeeId = Long.parseLong(result.getText());
+            jobRapport.employeeId = result.getText();
             AppDatabase.singleton.jobRapportDao().insert(jobRapport).subscribeOn(Schedulers.io()).subscribe(() -> {
                 AppDatabase.singleton.jobRapportDao().findAll().subscribe(jobRapports -> {
                     for(JobRapport jr : jobRapports){
                         System.out.println(jr.timeStamp);
 
                         final Map<String, String> jsonParams = new HashMap<>();
-                        jsonParams.put("employeeId", String.valueOf(jr.employeeId));
-                        jsonParams.put("instant", Instant.ofEpochMilli(jr.timeStamp).toString());
+                        jsonParams.put("employeeId", jr.employeeId);
+                        jsonParams.put("dateTimeInstant", Instant.ofEpochMilli(jr.timeStamp).toString());
 
                         JSONObject jsonObject = new JSONObject(jsonParams);
-                        requestQueue.add(new JsonObjectRequest(Request.Method.POST, "http://192.168.1.230:8080/api/work-events", jsonObject, response -> {
+                        requestQueue.add(new JsonObjectRequest(Request.Method.POST, "https://192.168.1.230:5001/api/WorkEvent", jsonObject, response -> {
                             AppDatabase.singleton.jobRapportDao().delete(jr).subscribeOn(Schedulers.io()).subscribe(() -> {
                                 System.out.println("Deleted");
                             });
                             System.out.println("OK");
                         }, error -> {
-                            if(error.networkResponse.statusCode == 409){//data already in server
+                            error.printStackTrace();
+
+                            if(error.networkResponse != null && error.networkResponse.statusCode == 409){//data already in server
                                 AppDatabase.singleton.jobRapportDao().delete(jr).subscribeOn(Schedulers.io()).subscribe(() -> {
                                     System.out.println("Deleted");
                                 });
