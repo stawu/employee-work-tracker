@@ -16,5 +16,16 @@ namespace EWT_Persistence
 
         public DbSet<EmployeeEntity> Employees { get; set; }
         public DbSet<WorkEventEntity> WorkEvents { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder
+                .Entity<WorkEventEntity>()
+                .Property(p => p.DateTimeInstant)
+                .HasConversion(dateTime => dateTime,
+                    dateTimeInstant => DateTime.SpecifyKind(dateTimeInstant, DateTimeKind.Utc));
+        }
     }
 }
