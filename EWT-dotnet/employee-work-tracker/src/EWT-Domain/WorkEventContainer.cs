@@ -19,6 +19,9 @@ namespace EWT_Domain
             return e1.DateTimeInstant < e2.DateTimeInstant ? -1 : 1;
         };
 
+        public IEnumerable<WorkEvent> Events { get => events.SelectMany(e => e.Value); }
+        
+
         public void Add(WorkEvent workEvent)
         {
             var workEventDate = workEvent.DateTimeInstant.Date;

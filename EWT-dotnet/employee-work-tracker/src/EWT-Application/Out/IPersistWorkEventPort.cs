@@ -11,5 +11,6 @@ namespace EWT_Application.Out
     public interface IPersistWorkEventPort
     {
         Task<Result> SaveAsync(Guid employeeId, WorkEvent workEvent);
+        Task<Result<IEnumerable<WorkEvent>>> GetWorkEventsOfEmployeeBetweenAsync(Guid employeeId, DateTime fromInclusive, DateTime toInclusive);
     }
 }

@@ -31,10 +31,22 @@ namespace EWT_Domain
         {
             var events = workEvents.GetEventsBetween(fromInclusive, toInclusive);
 
-            //todo refactor
+            return CalculateWorkDurationsFromWorkEvents(events);
+        }
+
+        public IEnumerable<WorkDuration> GetWorkDurations()
+        {
+            var events = workEvents.Events;
+
+            return CalculateWorkDurationsFromWorkEvents(events);
+        }
+
+        //todo refactor
+        private IEnumerable<WorkDuration> CalculateWorkDurationsFromWorkEvents(IEnumerable<WorkEvent> events)
+        {
             var workDurations = new LinkedList<WorkDuration>();
             WorkDuration currentWorkDuration = new WorkDuration();
-            foreach(var workEvent in events)
+            foreach (var workEvent in events)
             {
                 while (true)
                 {
