@@ -1,4 +1,5 @@
-﻿using EWT_Application.Errors;
+﻿using EWT_Application;
+using EWT_Application.Errors;
 using EWT_Application.Queries;
 using EWT_Web.DTO;
 using MediatR;
@@ -54,6 +55,41 @@ namespace EWT_Web.Controllers
                     { 
                         Date = dayStatus.date,
                         DayStatus = dayStatus.dayStatus
+                    })
+            });
+        }
+
+        [HttpGet("{employeeId}/detailed")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetDetailedSummaryOfEmployeeBetween(
+            [FromRoute] Guid employeeId,
+            [FromQuery][Required] DateTime fromInclusive,
+            [FromQuery][Required] DateTime toInclusive)
+        {
+            if (toInclusive < fromInclusive)
+                return BadRequest();
+
+            var result = await mediator.Send(new GetDetailedWorkSummaryOfEmployeeQuery(employeeId, fromInclusive, toInclusive));
+
+            if (result.HasError<EmployeeNotExistsError>())
+                return NotFound();
+            else if (result.IsFailed)
+                throw new NotImplementedException();
+
+            DetailedWorkSummary sWrkSm = result.Value;
+
+            return Ok(new DetailedWorkSummaryResponseDTO
+            {
+                StartDateTime = sWrkSm.StartDateTime,
+                EndDateTime = sWrkSm.EndDateTime,
+                MinutesOfWork = sWrkSm.MinutesOfWork,
+                WorkDurations = sWrkSm.WorkDurations.Select(workDuration =>
+                    new WorkDurationDTO
+                    {
+                        StartDateTimeInstant = workDuration.StartDateTimeInstant,
+                        EndDateTimeInstant = workDuration.EndDateTimeInstant
                     })
             });
         }
