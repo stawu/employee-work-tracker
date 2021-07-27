@@ -1,0 +1,31 @@
+<mat-card style="padding-bottom: 100px;">
+
+    <mat-toolbar color="primary">
+        <!-- <span>Obecności</span> -->
+
+        <button mat-flat-button matTooltip="Zresetuj zakres czasu" (click)="setToCurrentMonth()">
+            Dzisiaj
+        </button>
+
+        <button mat-icon-button matTooltip="Poprzedni miesiąc" (click)="previousMonth()">
+            <mat-icon>arrow_left</mat-icon>
+        </button>
+          
+        <mat-date-range-input style="width:0px;visibility:hidden;" [formGroup]="range" [rangePicker]="picker">
+            <input matStartDate formControlName="start">
+            <input matEndDate formControlName="end">
+        </mat-date-range-input>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+
+        <button mat-button matTooltip="Wybierz zakres czasu" (click)="picker.open()">
+            {{ selectedRangeString }}
+        </button>
+
+        <button mat-icon-button matTooltip="Kolejny miesiąc" (click)="nextMonth()">
+            <mat-icon>arrow_right</mat-icon>
+        </button>
+
+    </mat-toolbar>
+
+    <app-work-status-table [startDate]="selectedDateRange.start" [endDate]="selectedDateRange.end"></app-work-status-table>
+</mat-card>

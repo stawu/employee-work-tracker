@@ -1,0 +1,17 @@
+#qr-badges-snapshot-hide-container {
+    position: fixed;
+    opacity: 0; 
+    pointer-events: none;
+}
+
+#qr-badges-snapshot {
+    width: 800px;
+    display: flex;
+}
+
+.badge {
+    margin: 15px;
+    border: 1px solid grey;
+    width: 330px;
+    height: 198px;
+}

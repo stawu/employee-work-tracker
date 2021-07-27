@@ -1,0 +1,9 @@
+<div id="badge-container">
+    <div id="employee-name">
+        {{employee.name + ' ' + employee.lastName}}
+    </div>
+
+    <div id="employee-qr-code">
+        <qrcode [qrdata]="employee.id" [width]="178" [errorCorrectionLevel]="'M'"></qrcode>
+    </div>
+</div>

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,6 +45,11 @@ namespace EWT_Web
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<EWTDbContext>();
             services.AddRazorPages();
+
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "SPA/dist";
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,8 +61,12 @@ namespace EWT_Web
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "EWT_Web v1"));
             }
+            else
+            {
+                app.UseSpaStaticFiles();
+            }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
@@ -70,6 +80,17 @@ namespace EWT_Web
             });
 
             PersistenceServiceConfiguration.ConfigurePersistenceRuntime(env, dbContext);
+
+            app.UseSpa(spa =>
+            {
+                // To learn more about options for serving an Angular SPA
+                // see https://go.microsoft.com/fwlink/?linkid=864501
+                spa.Options.SourcePath = "SPA";
+                if (env.IsDevelopment())
+                {
+                    spa.UseAngularCliServer(npmScript: "start");
+                }
+            });
         }
     }
 }

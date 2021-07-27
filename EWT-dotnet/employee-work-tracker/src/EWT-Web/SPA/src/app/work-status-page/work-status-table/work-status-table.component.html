@@ -1,0 +1,36 @@
+<div style="width: 100%;">
+    <div style="float: left; width: 100px;">
+
+        <div class="employee-header-column">
+            Pracownicy:
+        </div>
+
+        <div class="employee-row" *ngFor="let employee of employeesData">
+            {{ employee.name + ' ' + employee.lastName }}
+        </div>
+    </div>
+
+    <div style="overflow-x: scroll; white-space: nowrap;">
+        <div class="header-column" *ngFor="let currentDay of selectedPeriodAsOrderedDays">
+            {{ 
+                currentDay.toLocaleDateString(undefined, 
+                {
+                    weekday: 'short',
+                    month: 'numeric',
+                    day: 'numeric'
+                })
+            }}
+        </div>
+
+        <div class="row" *ngFor="let employee of employeesData">
+            <div class="row-inline">
+                <div class="column" *ngFor="let dayInformation of dayStatusesOfEmployees[employee.id]">
+
+                    <app-work-status-cell [date]="dayInformation.date" [dayStatus]="dayInformation.dayStatus" [employeeId]="employee.id"></app-work-status-cell>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

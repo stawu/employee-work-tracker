@@ -1,0 +1,60 @@
+<h1 mat-dialog-title>Dodawanie pracownika</h1>
+
+<div mat-dialog-content>
+    <mat-tab-group>
+        <mat-tab label="Podstawowe">
+            <form class="full-width">
+                <table class="full-width">
+                    <tr>
+                        <td>
+                            <mat-form-field class="full-width" appearance="fill">
+                                <mat-label>Imię</mat-label>
+                                <input name="name" matInput [(ngModel)]="name" required>
+                            </mat-form-field>
+                        </td>
+
+                        <td>
+                            <mat-form-field class="full-width" appearance="fill">
+                                <mat-label>Nazwisko</mat-label>
+                                <input name="lastName" matInput [(ngModel)]="lastName" required>
+                            </mat-form-field>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </mat-tab>
+
+        <mat-tab label="Rejestracja czasu pracy" disabled>
+            
+        </mat-tab>
+
+        <mat-tab label="Grafik pracy" disabled>
+            
+        </mat-tab>
+
+        <mat-tab label="Urlopy" disabled>
+            
+        </mat-tab>
+
+        <mat-tab label="Uprawnienia" disabled>
+            
+        </mat-tab>
+
+        <mat-tab label="Zaawansowane" disabled>
+            
+        </mat-tab>
+    </mat-tab-group>
+</div>
+
+<div mat-dialog-actions align="end">
+    <button mat-flat-button (click)="closeDialog()">
+        Anuluj
+    </button>
+
+    <button mat-flat-button (click)="addEmployee()" color="primary" [disabled]="addingInProgress">
+        <div *ngIf="addingInProgress" id="adding-progress-spinner-container">
+            <mat-spinner diameter="30"></mat-spinner>
+        </div>
+        Dodaj
+    </button>
+</div>

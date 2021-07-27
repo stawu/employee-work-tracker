@@ -1,0 +1,8 @@
+.inline {
+    display: inline-block;
+}
+
+#row-container {
+    border: 1px solid;
+    border-color: rgba(174,176,179,0.52);
+}

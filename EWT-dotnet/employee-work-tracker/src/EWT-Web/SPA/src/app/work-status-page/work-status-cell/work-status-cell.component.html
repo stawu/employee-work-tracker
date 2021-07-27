@@ -1,0 +1,18 @@
+<button *ngIf="dayStatus=='PRESENCE'" mat-icon-button [matMenuTriggerFor]="menu" (click)="tryToFetchDetailedWorkSummaryOfSelectedDay()">
+    <mat-icon style="color: #61a00b;">brightness_1</mat-icon>
+</button>
+
+<button *ngIf="dayStatus=='PROBLEM'" mat-icon-button [matMenuTriggerFor]="menu" (click)="tryToFetchDetailedWorkSummaryOfSelectedDay()">
+    <mat-icon style="color: #f5c401;">warning</mat-icon>
+</button>
+
+<mat-menu #menu="matMenu" xPosition="after">
+    <mat-spinner *ngIf="workInformations === null; else detailedWorkSummaryNotNull"></mat-spinner>
+    <ng-template  #detailedWorkSummaryNotNull>
+        Czasy pracy:
+
+        <div  *ngFor="let workDurationParsed of workInformations!.workDurations">
+            {{ workDurationParsed.startString + ' - ' + workDurationParsed.endString }}
+        </div>
+    </ng-template>
+</mat-menu>
