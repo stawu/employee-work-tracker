@@ -1,0 +1,25 @@
+<h1 mat-dialog-title>Usuwanie pracownika</h1>
+
+<div mat-dialog-content>
+    <p>Czy napewno chcesz usunąć poniższych pracowników?</p>
+    <ul>
+        <li *ngFor="let employee of data.employeesToDelete">
+            {{employee.name + ' ' + employee.lastName}}
+        </li>
+    </ul>
+</div>
+
+<div mat-dialog-actions align="end">
+    <button mat-flat-button (click)="closeDialog()">
+        Anuluj
+    </button>
+
+    <button mat-flat-button (click)="deleteEmployees()" color="warn" [disabled]="deletingInProgress">
+        <div *ngIf="deletingInProgress" id="deleting-progress-spinner-container">
+            <mat-spinner diameter="30"></mat-spinner>
+        </div>
+
+        Usuń
+        <mat-icon>delete</mat-icon>
+    </button>
+</div>

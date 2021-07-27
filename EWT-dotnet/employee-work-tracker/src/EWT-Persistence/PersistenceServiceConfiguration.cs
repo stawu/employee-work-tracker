@@ -27,10 +27,11 @@ namespace EWT_Persistence
 
         public static void ConfigurePersistenceRuntime(IWebHostEnvironment env, EWTDbContext dbContext)
         {
-            if (env.IsDevelopment())
-            {
+            //todo zmień przy kolejnym releasu
+            //if (env.IsDevelopment())
+            //{
                 dbContext.Database.EnsureCreated();
-            }
+            //}
         }
     }
 }
