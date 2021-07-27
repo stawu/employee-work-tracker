@@ -10,6 +10,7 @@ import androidx.room.Room;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
@@ -39,6 +40,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -49,11 +51,17 @@ public class MainActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
     private volatile boolean allowQrProcessing_cam_thread = true;
     private volatile boolean allowQrProcessing_main_thread = true;
+    private SettingsManager settingsManager;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.settingsManager = new SettingsManager(this);
+        if(!settingsManager.getServerAddress().isPresent())
+            this.startActivity(new Intent(this, SettingsActivity.class));
+
 
         //Remove title bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -119,20 +127,23 @@ public class MainActivity extends AppCompatActivity {
                         jsonParams.put("dateTimeInstant", Instant.ofEpochMilli(jr.timeStamp).toString());
 
                         JSONObject jsonObject = new JSONObject(jsonParams);
-                        requestQueue.add(new JsonObjectRequest(Request.Method.POST, "https://192.168.1.230:5001/api/WorkEvent", jsonObject, response -> {
-                            AppDatabase.singleton.jobRapportDao().delete(jr).subscribeOn(Schedulers.io()).subscribe(() -> {
-                                System.out.println("Deleted");
-                            });
-                            System.out.println("OK");
-                        }, error -> {
-                            error.printStackTrace();
-
-                            if(error.networkResponse != null && error.networkResponse.statusCode == 409){//data already in server
+                        final Optional<String> serverAddressOpt = settingsManager.getServerAddress();
+                        if(serverAddressOpt.isPresent()) {
+                            requestQueue.add(new JsonObjectRequest(Request.Method.POST, serverAddressOpt.get() + "/api/WorkEvent", jsonObject, response -> {
                                 AppDatabase.singleton.jobRapportDao().delete(jr).subscribeOn(Schedulers.io()).subscribe(() -> {
                                     System.out.println("Deleted");
                                 });
-                            }
-                        }));
+                                System.out.println("OK");
+                            }, error -> {
+                                error.printStackTrace();
+
+                                if (error.networkResponse != null && error.networkResponse.statusCode == 409) {//data already in server
+                                    AppDatabase.singleton.jobRapportDao().delete(jr).subscribeOn(Schedulers.io()).subscribe(() -> {
+                                        System.out.println("Deleted");
+                                    });
+                                }
+                            }));
+                        }
                     }
                 });
             });
